@@ -34,7 +34,7 @@ input::placeholder{color:#555;}
 <body>
 
 <h2>商品上架</h2>
-<form id="formData">
+<form id="formData" onsubmit="return false;">
 <div class="item">
     <label class="lab">* 1.登录方式</label>
     <div class="radio-box">
@@ -158,7 +158,7 @@ input::placeholder{color:#555;}
 </div>
 </form>
 
-<button class="btn" onclick="checkSubmit()">提交</button>
+<button class="btn" id="submitBtn">提交</button>
 
 <!-- 规则弹窗 -->
 <div class="pop" id="rulePop">
@@ -171,7 +171,6 @@ input::placeholder{color:#555;}
         <p>5.出租期间无特殊原因 退号扣除一半违约金</p>
         <p>6.禁止私加打手，私下交易，发现直接扣除租金提前结单。举报打手私自加有奖励</p>
         <p>7.感谢支持莱勊商行 欢迎再次选择！</p>
-        <p>8.您提交的信息仅用于商品上架联系，不会对外泄露! </p>
         <button class="close-pop" onclick="hidePop()">关闭</button>
     </div>
 </div>
@@ -193,25 +192,35 @@ input::placeholder{color:#555;}
 </div>
 
 <script>
-// ===== 1. Supabase 配置（换成你自己的） =====
-const SUPABASE_URL = 'https://vgtdgxvrupiyhsrcuvjj.supabase.co/rest/v1';
-const SUPABASE_ANON_KEY = 'sb_publishable_hiyun6qsgqCSwbXtqgbgbQ_45LM9Sbt';
+// ===== Supabase 配置 =====
+const SUPABASE_URL = 'https://vgtdgxvrupiyhsrcuvjj.supabase.co/rest/v1';  // 👈 换成你自己的
+const SUPABASE_ANON_KEY = 'sb_publishable_hiyun6qsgqCSwbXtqgbgbQ_45LM9Sbt';               // 👈 换成你自己的
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// ===== 2. 弹窗函数 =====
+// ===== 弹窗函数 =====
 function showPop(){
-    document.getElementById('rulePop').style.display='flex';
-}
-function hidePop(){
-    document.getElementById('rulePop').style.display='none';
-}
-function closeSuccess(){
-    document.getElementById('laikePage').style.display='none';
-    document.getElementById('bairenPage').style.display='none';
+    document.getElementById('rulePop').style.display = 'flex';
+    console.log('规则弹窗已打开');
 }
 
-// ===== 3. 提交函数 =====
-async function checkSubmit(){
+function hidePop(){
+    document.getElementById('rulePop').style.display = 'none';
+}
+
+function closeSuccess(){
+    document.getElementById('laikePage').style.display = 'none';
+    document.getElementById('bairenPage').style.display = 'none';
+}
+
+// ===== 提交按钮监听 =====
+document.getElementById('submitBtn').addEventListener('click', function(){
+    console.log('提交按钮被点击了');
+    checkSubmit();
+});
+
+// ===== 提交函数 =====
+function checkSubmit(){
+    console.log('checkSubmit 函数开始执行');
+    
     let form = document.getElementById("formData");
 
     // 校验
@@ -267,25 +276,23 @@ async function checkSubmit(){
     };
 
     // 发送到 Supabase
-    try {
-        const { error } = await supabase
-            .from('submissions')
-            .insert([formData]);
-        
-        if (error) throw error;
-
-        // 成功，显示客服二维码
-        if(form.zzid.value === "laike"){
-            document.getElementById("laikePage").style.display = "block";
-        }else{
-            document.getElementById("bairenPage").style.display = "block";
+    supabase.from('submissions').insert([formData]).then(function(result){
+        if(result.error){
+            console.error('提交失败', result.error);
+            alert('提交失败，请稍后重试');
+        } else {
+            // 成功，显示客服二维码
+            if(form.zzid.value === "laike"){
+                document.getElementById("laikePage").style.display = "block";
+            } else {
+                document.getElementById("bairenPage").style.display = "block";
+            }
+            form.reset();
         }
-        form.reset();
-
-    } catch (err) {
+    }).catch(function(err){
         console.error('提交失败', err);
         alert('提交失败，请稍后重试或联系客服');
-    }
+    });
 }
 </script>
 </body>
