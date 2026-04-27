@@ -29,7 +29,6 @@ input::placeholder{color:#555;}
 .success-txt{font-size:15px;color:#eee;margin-bottom:30px;}
 .end-btn{background:#ff3333;color:#fff;border:none;padding:10px 25px;border-radius:6px;font-size:14px;}
 </style>
-<!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -161,6 +160,7 @@ input::placeholder{color:#555;}
 
 <button class="btn" onclick="checkSubmit()">提交</button>
 
+<!-- 规则弹窗 -->
 <div class="pop" id="rulePop">
     <div class="pop-box">
         <h4>商行出租规则</h4>
@@ -176,6 +176,7 @@ input::placeholder{color:#555;}
     </div>
 </div>
 
+<!-- 莱勊商行客服 -->
 <div class="success-page" id="laikePage">
     <h2>联系客服</h2>
     <img src="laike.png" alt="客服">
@@ -183,6 +184,7 @@ input::placeholder{color:#555;}
     <button class="end-btn" onclick="closeSuccess()">已添加，结束页面</button>
 </div>
 
+<!-- 白刃客服 -->
 <div class="success-page" id="bairenPage">
     <h2>上架成功</h2>
     <img src="bairen.png" alt="客服">
@@ -191,25 +193,28 @@ input::placeholder{color:#555;}
 </div>
 
 <script>
-// ========== 1. 初始化 Supabase（换成你自己的钥匙） ==========
-const SUPABASE_URL = 'https://vgtdgxvrupiyhsrcuvjj.supabase.co/rest/v1'; // 👈 换成你的 Project URL
-const SUPABASE_ANON_KEY = 'sb_publishable_hiyun6qsgqCSwbXtqgbgbQ_45LM9Sbt';               // 👈 换成你的 anon key
+// ===== 1. Supabase 配置（换成你自己的） =====
+const SUPABASE_URL = 'https://vgtdgxvrupiyhsrcuvjj.supabase.co/rest/v1';
+const SUPABASE_ANON_KEY = 'sb_publishable_hiyun6qsgqCSwbXtqgbgbQ_45LM9Sbt';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ========== 2. 弹窗逻辑 ==========
-function showPop(){document.getElementById('rulePop').style.display='flex';}
-function hidePop(){document.getElementById('rulePop').style.display='none';}
-
+// ===== 2. 弹窗函数 =====
+function showPop(){
+    document.getElementById('rulePop').style.display='flex';
+}
+function hidePop(){
+    document.getElementById('rulePop').style.display='none';
+}
 function closeSuccess(){
     document.getElementById('laikePage').style.display='none';
     document.getElementById('bairenPage').style.display='none';
 }
 
-// ========== 3. 提交表单 ==========
+// ===== 3. 提交函数 =====
 async function checkSubmit(){
     let form = document.getElementById("formData");
 
-    // === 校验（保持你原来的全部校验） ===
+    // 校验
     if(!form.login.value){alert("请选择登录方式");return;}
     if(!form.lv.value.trim()){alert("请填写等级");return;}
     if(!form.rank.value.trim()){alert("请填写段位");return;}
@@ -232,13 +237,13 @@ async function checkSubmit(){
     if(!form.qq.value.trim()){alert("请填写QQ号");return;}
     if(!form.agree.checked){alert("请勾选阅读并同意商行出租规则");return;}
 
-    // === 收集刀皮多选 ===
+    // 收集刀皮
     let selectedKnifes = [];
     document.querySelectorAll('input[name="knifeSkin"]:checked').forEach(function(cb){
         selectedKnifes.push(cb.value);
     });
 
-    // === 组织数据 ===
+    // 组织数据
     let formData = {
         login: form.login.value,
         lv: form.lv.value.trim(),
@@ -261,7 +266,7 @@ async function checkSubmit(){
         agree: true
     };
 
-    // === 发送到 Supabase ===
+    // 发送到 Supabase
     try {
         const { error } = await supabase
             .from('submissions')
@@ -269,7 +274,7 @@ async function checkSubmit(){
         
         if (error) throw error;
 
-        // 成功，显示对应二维码
+        // 成功，显示客服二维码
         if(form.zzid.value === "laike"){
             document.getElementById("laikePage").style.display = "block";
         }else{
