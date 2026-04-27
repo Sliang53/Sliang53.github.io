@@ -247,25 +247,25 @@ function checkSubmit(){
     });
 
     let formData = {
-        login: form.login.value,
-        lv: form.lv.value.trim(),
-        rank: form.rank.value.trim(),
-        kd: form.kd.value.trim(),
-        coin: form.coin.value.trim(),
-        bx: form.bx.value,
-        fw: form.fw.value.trim(),
-        knife_skin: selectedKnifes.join(', '),
-        red: form.red.value.trim() || null,
-        aw: form.aw.value.trim(),
-        lj: form.lj.value.trim(),
-        lt: form.lt.value.trim(),
-        online: form.online.value.trim(),
-        fh: form.fh.value,
-        zzid: form.zzid.value,
-        phone: form.phone.value.trim(),
-        wx: form.wx.value.trim(),
-        qq: form.qq.value.trim(),
-        agree: true
+        "登录方式": form.login.value,
+        "等级1": form.lv.value.trim(),
+        "段位": form.rank.value.trim(),
+        "绝密KD": form.kd.value.trim(),
+        "纯币": form.coin.value.trim(),
+        "赛季保险": form.bx.value,
+        "体力负重": form.fw.value.trim(),
+        "刀皮": selectedKnifes.join(', '),
+        "红皮": form.red.value.trim() || null,
+        "AW子弹": form.aw.value.trim(),
+        "六甲": form.lj.value.trim(),
+        "六头": form.lt.value.trim(),
+        "在线时间": form.online.value.trim(),
+        "封号记录": form.fh.value,
+        "主播ID": form.zzid.value,
+        "手机号": form.phone.value.trim(),
+        "微信号": form.wx.value.trim(),
+        "QQ号": form.qq.value.trim(),
+        "同意协议": true
     };
 
     supabaseClient.from('submissions').insert([formData]).then(function(result){
