@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no">
+<title>商品上架</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:system-ui,Microsoft YaHei,sans-serif;background:#0b0e17;color:#f0f0f0;padding:15px;font-size:14px;}
+h2{text-align:center;font-size:18px;margin-bottom:18px;font-weight:500;}
+.item{margin-bottom:12px;}
+.lab{font-size:13px;margin-bottom:6px;display:block;color:#ccc;}
+input[type="text"],input[type="tel"]{width:100%;background:#151a27;border:1px solid #282f40;border-radius:6px;padding:9px 12px;color:#fff;font-size:13px;outline:none;}
+input::placeholder{color:#555;}
+.radio-box,.checkbox-box{border:1px solid #282f40;border-radius:6px;overflow:hidden;}
+.r{display:flex;align-items:center;padding:10px 12px;border-bottom:1px solid #282f40;font-size:13px;}
+.r:last-child{border-bottom:none;}
+.r input{margin-right:8px;}
+.agree-wrap{padding:10px 12px;border:1px solid #282f40;border-radius:6px;margin:15px 0;}
+.red-text{color:#ff3333;cursor:pointer;}
+.btn{width:100%;background:#2563eb;color:#fff;border:none;border-radius:6px;padding:11px;font-size:15px;}
+.pop{display:none;position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.75);padding:20px;align-items:center;justify-content:center;z-index:999;}
+.pop-box{background:#151a27;width:100%;max-width:360px;border-radius:8px;padding:18px;}
+.pop-box h4{color:#ff3333;margin-bottom:12px;font-size:15px;}
+.pop-box p{font-size:13px;color:#ddd;margin:4px 0;}
+.close-pop{margin-top:15px;background:#ff3333;color:#fff;border:none;padding:7px 15px;border-radius:4px;}
+.success-page{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0b0e17;z-index:9999;text-align:center;padding:30px 20px;}
+.success-page img{width:260px;border-radius:8px;margin:20px 0;}
+.success-txt{font-size:15px;color:#eee;margin-bottom:30px;}
+.end-btn{background:#ff3333;color:#fff;border:none;padding:10px 25px;border-radius:6px;font-size:14px;}
+</style>
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<h2>商品上架</h2>
+<form id="formData">
+<div class="item">
+    <label class="lab">* 1.登录方式</label>
+    <div class="radio-box">
+        <label class="r"><input type="radio" name="login" value="QQ">QQ</label>
+        <label class="r"><input type="radio" name="login" value="微信">微信</label>
+        <label class="r"><input type="radio" name="login" value="账密">账密</label>
+    </div>
+</div>
+
+<div class="item">
+    <label class="lab">* 2.等级</label>
+    <input type="text" name="lv" placeholder="请输入等级">
+</div>
+
+<div class="item">
+    <label class="lab">* 3.段位</label>
+    <input type="text" name="rank" placeholder="请输入段位">
+</div>
+
+<div class="item">
+    <label class="lab">* 4.绝密KD</label>
+    <input type="text" name="kd" placeholder="请输入KD">
+</div>
+
+<div class="item">
+    <label class="lab">* 5.纯币/M</label>
+    <input type="text" name="coin" placeholder="只填纯币数量">
+</div>
+
+<div class="item">
+    <label class="lab">* 6.赛季保险</label>
+    <div class="radio-box">
+        <label class="r"><input type="radio" name="bx" value="9格">9格</label>
+        <label class="r"><input type="radio" name="bx" value="6格">6格</label>
+        <label class="r"><input type="radio" name="bx" value="4格">4格</label>
+    </div>
+</div>
+
+<div class="item">
+    <label class="lab">* 7.体力负重</label>
+    <input type="text" name="fw" placeholder="例：66">
+</div>
+
+<div class="item">
+    <label class="lab">* 8.刀皮（可多选）</label>
+    <div class="checkbox-box">
+        <label class="r"><input type="checkbox" name="knifeSkin" value="影锋">影锋</label>
+        <label class="r"><input type="checkbox" name="knifeSkin" value="怜悯">怜悯</label>
+        <label class="r"><input type="checkbox" name="knifeSkin" value="北极星">北极星</label>
+        <label class="r"><input type="checkbox" name="knifeSkin" value="信条">信条</label>
+        <label class="r"><input type="checkbox" name="knifeSkin" value="黑海">黑海</label>
+        <label class="r"><input type="checkbox" name="knifeSkin" value="鸱枭">鸱枭</label>
+        <label class="r"><input type="checkbox" name="knifeSkin" value="蝴蝶刀">蝴蝶刀</label>
+        <label class="r"><input type="checkbox" name="knifeSkin" value="暗星">暗星</label>
+        <label class="r"><input type="checkbox" name="knifeSkin" value="无">无</label>
+    </div>
+</div>
+
+<div class="item">
+    <label class="lab">9.红皮（选填）</label>
+    <input type="text" name="red" placeholder="有就填，没有留空">
+</div>
+
+<div class="item">
+    <label class="lab">* 10.AW子弹</label>
+    <input type="text" name="aw" placeholder="0.8/发">
+</div>
+
+<div class="item">
+    <label class="lab">* 11.六甲</label>
+    <input type="text" name="lj" placeholder="六甲数量">
+</div>
+
+<div class="item">
+    <label class="lab">* 12.六头</label>
+    <input type="text" name="lt" placeholder="六头数量">
+</div>
+
+<div class="item">
+    <label class="lab">* 13.在线时间</label>
+    <input type="text" name="online" placeholder="例：早8-晚12">
+</div>
+
+<div class="item">
+    <label class="lab">* 14.封号记录</label>
+    <div class="radio-box">
+        <label class="r"><input type="radio" name="fh" value="一天">一天</label>
+        <label class="r"><input type="radio" name="fh" value="三天">三天</label>
+        <label class="r"><input type="radio" name="fh" value="无">无</label>
+    </div>
+</div>
+
+<div class="item">
+    <label class="lab">* 15.主播ID</label>
+    <div class="radio-box">
+        <label class="r"><input type="radio" name="zzid" value="laike">莱勊商行</label>
+        <label class="r"><input type="radio" name="zzid" value="bairen">白刃</label>
+    </div>
+</div>
+
+<div class="item">
+    <label class="lab">* 16.手机号</label>
+    <input type="tel" name="phone" placeholder="填写手机号">
+</div>
+
+<div class="item">
+    <label class="lab">* 17.微信号</label>
+    <input type="text" name="wx" placeholder="填写微信号">
+</div>
+
+<div class="item">
+    <label class="lab">* 18.QQ号</label>
+    <input type="text" name="qq" placeholder="填写QQ号">
+</div>
+
+<div class="agree-wrap">
+    <label style="font-size:13px;">
+        <input type="checkbox" name="agree">
+        我已阅读并同意 <span class="red-text" onclick="showPop()">《商行出租规则》</span>
+    </label>
+</div>
+</form>
+
+<button class="btn" onclick="checkSubmit()">提交</button>
+
+<div class="pop" id="rulePop">
+    <div class="pop-box">
+        <h4>商行出租规则</h4>
+        <p>1.租期内勿催</p>
+        <p>2.租期内禁止顶号</p>
+        <p>3.上架了就等待消息，本商行与许多正规俱乐部具有供需关系丶合作。比例也与正规的商行无异 更多详情请看企微主页详细介绍。</p>
+        <p>4.结单收10%的服务费，出现十年直接全额赔偿，接受不了不要提交资料！</p>
+        <p>5.出租期间无特殊原因 退号扣除一半违约金</p>
+        <p>6.禁止私加打手，私下交易，发现直接扣除租金提前结单。举报打手私自加有奖励</p>
+        <p>7.感谢支持莱勊商行 欢迎再次选择！</p>
+        <p>8.您提交的信息仅用于商品上架联系，不会对外泄露! </p>
+        <button class="close-pop" onclick="hidePop()">关闭</button>
+    </div>
+</div>
+
+<div class="success-page" id="laikePage">
+    <h2>联系客服</h2>
+    <img src="laike.png" alt="客服">
+    <div class="success-txt">上架成功，请识别或截图添加客服</div>
+    <button class="end-btn" onclick="closeSuccess()">已添加，结束页面</button>
+</div>
+
+<div class="success-page" id="bairenPage">
+    <h2>上架成功</h2>
+    <img src="bairen.png" alt="客服">
+    <div class="success-txt">上架成功，请扫码添加客服</div>
+    <button class="end-btn" onclick="closeSuccess()">完成</button>
+</div>
+
+<script>
+// ========== 1. 初始化 Supabase（换成你自己的钥匙） ==========
+const SUPABASE_URL = 'https://vgtdgxvrupiyhsrcuvjj.supabase.co/rest/v1'; // 👈 换成你的 Project URL
+const SUPABASE_ANON_KEY = 'sb_publishable_hiyun6qsgqCSwbXtqgbgbQ_45LM9Sbt';               // 👈 换成你的 anon key
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ========== 2. 弹窗逻辑 ==========
+function showPop(){document.getElementById('rulePop').style.display='flex';}
+function hidePop(){document.getElementById('rulePop').style.display='none';}
+
+function closeSuccess(){
+    document.getElementById('laikePage').style.display='none';
+    document.getElementById('bairenPage').style.display='none';
+}
+
+// ========== 3. 提交表单 ==========
+async function checkSubmit(){
+    let form = document.getElementById("formData");
+
+    // === 校验（保持你原来的全部校验） ===
+    if(!form.login.value){alert("请选择登录方式");return;}
+    if(!form.lv.value.trim()){alert("请填写等级");return;}
+    if(!form.rank.value.trim()){alert("请填写段位");return;}
+    if(!form.kd.value.trim()){alert("请填写绝密KD");return;}
+    if(!form.coin.value.trim()){alert("请填写纯币数量");return;}
+    if(!form.bx.value){alert("请选择赛季保险");return;}
+    if(!form.fw.value.trim()){alert("请填写体力负重");return;}
+    
+    let hasKnife = document.querySelector('input[name="knifeSkin"]:checked');
+    if(!hasKnife){alert("请选择刀皮");return;}
+    
+    if(!form.aw.value.trim()){alert("请填写AW子弹信息");return;}
+    if(!form.lj.value.trim()){alert("请填写六甲情况");return;}
+    if(!form.lt.value.trim()){alert("请填写六头情况");return;}
+    if(!form.online.value.trim()){alert("请填写在线时间");return;}
+    if(!form.fh.value){alert("请选择封号记录");return;}
+    if(!form.zzid.value){alert("⚠️ 必须选择主播ID");return;}
+    if(!form.phone.value.trim()){alert("请填写手机号");return;}
+    if(!form.wx.value.trim()){alert("请填写微信号");return;}
+    if(!form.qq.value.trim()){alert("请填写QQ号");return;}
+    if(!form.agree.checked){alert("请勾选阅读并同意商行出租规则");return;}
+
+    // === 收集刀皮多选 ===
+    let selectedKnifes = [];
+    document.querySelectorAll('input[name="knifeSkin"]:checked').forEach(function(cb){
+        selectedKnifes.push(cb.value);
+    });
+
+    // === 组织数据 ===
+    let formData = {
+        login: form.login.value,
+        lv: form.lv.value.trim(),
+        rank: form.rank.value.trim(),
+        kd: form.kd.value.trim(),
+        coin: form.coin.value.trim(),
+        bx: form.bx.value,
+        fw: form.fw.value.trim(),
+        knife_skin: selectedKnifes.join(', '),
+        red: form.red.value.trim() || null,
+        aw: form.aw.value.trim(),
+        lj: form.lj.value.trim(),
+        lt: form.lt.value.trim(),
+        online: form.online.value.trim(),
+        fh: form.fh.value,
+        zzid: form.zzid.value,
+        phone: form.phone.value.trim(),
+        wx: form.wx.value.trim(),
+        qq: form.qq.value.trim(),
+        agree: true
+    };
+
+    // === 发送到 Supabase ===
+    try {
+        const { error } = await supabase
+            .from('submissions')
+            .insert([formData]);
+        
+        if (error) throw error;
+
+        // 成功，显示对应二维码
+        if(form.zzid.value === "laike"){
+            document.getElementById("laikePage").style.display = "block";
+        }else{
+            document.getElementById("bairenPage").style.display = "block";
+        }
+        form.reset();
+
+    } catch (err) {
+        console.error('提交失败', err);
+        alert('提交失败，请稍后重试或联系客服');
+    }
+}
+</script>
+</body>
+</html>
