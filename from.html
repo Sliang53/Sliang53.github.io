@@ -171,6 +171,7 @@ input::placeholder{color:#555;}
         <p>5.出租期间无特殊原因 退号扣除一半违约金</p>
         <p>6.禁止私加打手，私下交易，发现直接扣除租金提前结单。举报打手私自加有奖励</p>
         <p>7.感谢支持莱勊商行 欢迎再次选择！</p>
+        <p>8.您提交的信息仅用于商品上架联系，不会对外泄露! </p>
         <button class="close-pop" onclick="hidePop()">关闭</button>
     </div>
 </div>
@@ -195,17 +196,15 @@ input::placeholder{color:#555;}
 // ===== Supabase 配置 =====
 const SUPABASE_URL = 'https://vgtdgxvrupiyhsrcuvjj.supabase.co/rest/v1';  // 👈 换成你自己的
 const SUPABASE_ANON_KEY = 'sb_publishable_hiyun6qsgqCSwbXtqgbgbQ_45LM9Sbt';               // 👈 换成你自己的
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 // ===== 弹窗函数 =====
 function showPop(){
     document.getElementById('rulePop').style.display = 'flex';
-    console.log('规则弹窗已打开');
 }
-
 function hidePop(){
     document.getElementById('rulePop').style.display = 'none';
 }
-
 function closeSuccess(){
     document.getElementById('laikePage').style.display = 'none';
     document.getElementById('bairenPage').style.display = 'none';
@@ -213,17 +212,13 @@ function closeSuccess(){
 
 // ===== 提交按钮监听 =====
 document.getElementById('submitBtn').addEventListener('click', function(){
-    console.log('提交按钮被点击了');
     checkSubmit();
 });
 
 // ===== 提交函数 =====
 function checkSubmit(){
-    console.log('checkSubmit 函数开始执行');
-    
     let form = document.getElementById("formData");
 
-    // 校验
     if(!form.login.value){alert("请选择登录方式");return;}
     if(!form.lv.value.trim()){alert("请填写等级");return;}
     if(!form.rank.value.trim()){alert("请填写段位");return;}
@@ -246,13 +241,11 @@ function checkSubmit(){
     if(!form.qq.value.trim()){alert("请填写QQ号");return;}
     if(!form.agree.checked){alert("请勾选阅读并同意商行出租规则");return;}
 
-    // 收集刀皮
     let selectedKnifes = [];
     document.querySelectorAll('input[name="knifeSkin"]:checked').forEach(function(cb){
         selectedKnifes.push(cb.value);
     });
 
-    // 组织数据
     let formData = {
         login: form.login.value,
         lv: form.lv.value.trim(),
@@ -275,13 +268,11 @@ function checkSubmit(){
         agree: true
     };
 
-    // 发送到 Supabase
-    supabase.from('submissions').insert([formData]).then(function(result){
+    supabaseClient.from('submissions').insert([formData]).then(function(result){
         if(result.error){
             console.error('提交失败', result.error);
             alert('提交失败，请稍后重试');
         } else {
-            // 成功，显示客服二维码
             if(form.zzid.value === "laike"){
                 document.getElementById("laikePage").style.display = "block";
             } else {
@@ -294,6 +285,9 @@ function checkSubmit(){
         alert('提交失败，请稍后重试或联系客服');
     });
 }
+</script>
+</body>
+</html>
 </script>
 </body>
 </html>
